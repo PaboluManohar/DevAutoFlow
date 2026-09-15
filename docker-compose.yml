@@ -28,7 +28,7 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-development}
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://devautoflow:devautoflow@db:5432/devautoflow}
-      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-devautoflow-jwt-secret-change-me-to-32-plus-chars}
       MCP_BASE_URL: ${MCP_BASE_URL:-http://host.docker.internal:5052/mcp}
       MOBILEMCP_AUTH: ${MOBILEMCP_AUTH:-devautoflow-secret}
       ADB_SERVER_SOCKET: ${ADB_SERVER_SOCKET:-tcp:host.docker.internal:5037}
