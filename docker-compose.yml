@@ -59,6 +59,9 @@ services:
     environment:
       MOBILEMCP_AUTH: ${MOBILEMCP_AUTH:-devautoflow-secret}
       ADB_SERVER_SOCKET: ${ADB_SERVER_SOCKET:-tcp:127.0.0.1:5037}
+      MOBILEMCP_LEGACY_ROBOT: "1"
+    volumes:
+      - apk_uploads:/app/uploads
     network_mode: host
     command: ["node", "lib/index.js", "--listen", "0.0.0.0:5052"]
 
