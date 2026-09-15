@@ -1,0 +1,67 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: devautoflow-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-devautoflow}
+      POSTGRES_USER: ${POSTGRES_USER:-devautoflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devautoflow}
+    ports:
+      - "5053:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-devautoflow} -d ${POSTGRES_DB:-devautoflow}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../DevAutoFlow-Backend
+    container_name: devautoflow-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://devautoflow:devautoflow@db:5432/devautoflow}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      MCP_BASE_URL: ${MCP_BASE_URL:-http://host.docker.internal:5052/mcp}
+      MOBILEMCP_AUTH: ${MOBILEMCP_AUTH:-devautoflow-secret}
+      ADB_SERVER_SOCKET: ${ADB_SERVER_SOCKET:-tcp:host.docker.internal:5037}
+    ports:
+      - "5051:8000"
+    volumes:
+      - apk_uploads:/app/uploads
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build:
+      context: ../DevAutoFlow-UI
+    container_name: devautoflow-ui
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5050:80"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:5051}
+
+  mcp:
+    build:
+      context: ../DevAutoFlow-MCP
+    container_name: devautoflow-mcp
+    restart: unless-stopped
+    environment:
+      MOBILEMCP_AUTH: ${MOBILEMCP_AUTH:-devautoflow-secret}
+      ADB_SERVER_SOCKET: ${ADB_SERVER_SOCKET:-tcp:127.0.0.1:5037}
+    network_mode: host
+    command: ["node", "lib/index.js", "--listen", "0.0.0.0:5052"]
+
+volumes:
+  postgres_data:
+  apk_uploads:
