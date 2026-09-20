@@ -1,17 +1,17 @@
 # DevAutoFlow
 
-DevAutoFlow is a lightweight web platform for AI-driven Android automation. It includes a FastAPI backend, a React + Vite frontend, a PostgreSQL database, and the existing Android MCP server.
+DevAutoFlow is a lightweight web platform for AI-powered Android automation. The project combines a FastAPI backend, a React and Vite frontend, a PostgreSQL database, and the existing Android MCP server.
 
 ## Services
 
-- Frontend: React + Vite + TypeScript
-- Backend: FastAPI application
-- Database: PostgreSQL
-- MCP: Android automation server
+- **Frontend:** React, Vite, and TypeScript
+- **Backend:** FastAPI
+- **Database:** PostgreSQL
+- **MCP server:** Android automation service
 
-## Run the full product with Docker Compose
+## Run the full stack with Docker Compose
 
-From the project root:
+Run the following commands from the project root:
 
 ```bash
 cd /home/manohar/Desktop/code/DevAutoFlow
@@ -19,34 +19,34 @@ cp .env.example .env
 docker compose up --build
 ```
 
-If you want it in the background:
+To run the services in the background:
 
 ```bash
 docker compose up --build -d
 ```
 
-To stop everything:
+To stop all services:
 
 ```bash
 docker compose down
 ```
 
-To view logs:
+To follow the service logs:
 
 ```bash
 docker compose logs -f
 ```
 
-Open the app once the containers are running:
+Once the containers are running, access the services at:
 
 - Frontend: http://localhost:5050
 - Backend API: http://localhost:5051/docs
 - MCP endpoint: http://localhost:5052/mcp
 - PostgreSQL: localhost:5053
 
-> The project uses the compose file in this repo to start the database, backend, frontend, and MCP service together on the 5050-5053 port range.
+> Docker Compose starts the database, backend, frontend, and MCP services together. The services use ports 5050 through 5053.
 
-## Local development without Docker
+## Run locally without Docker
 
 ### Backend
 
@@ -75,13 +75,13 @@ npm run build
 node lib/index.js --listen 0.0.0.0:5052
 ```
 
-The backend discovers MCP tools with `langchain-mcp-adapters` and passes them into the LangGraph device-agent node.
+The backend discovers MCP tools through `langchain-mcp-adapters` and makes them available to the LangGraph device-agent node.
 
-## Environment notes
+## Environment requirements
 
-- The backend expects PostgreSQL and the MCP service to be available.
-- The MCP service uses host networking and reaches the host Android ADB server through `127.0.0.1:5037`.
-- On Linux, start ADB before Compose:
+- The backend requires PostgreSQL and the MCP service to be running.
+- The MCP service uses host networking to connect to the host Android ADB server at `127.0.0.1:5037`.
+- On Linux, start ADB before launching Docker Compose:
 
   ```bash
   adb kill-server
@@ -89,16 +89,16 @@ The backend discovers MCP tools with `langchain-mcp-adapters` and passes them in
   adb devices
   ```
 
-  Host networking lets the MCP container use the host network namespace directly.
+  Host networking allows the MCP container to use the host network namespace directly.
 
-## Default credentials
+## Default configuration
 
 - Database user: `devautoflow`
 - Database password: `devautoflow`
 - JWT secret: `change-me-in-production`
 - MCP auth: `devautoflow-secret`
 
-## Useful commands
+## Common commands
 
 ```bash
 # View running containers
@@ -125,4 +125,4 @@ Browser
   -> ADB / Android devices
 ```
 
-This starter structure is intentionally simple and keeps the product easy to run locally while matching the architecture described in the implementation document.
+This starter structure is intentionally simple, making the product easy to run locally while following the architecture described in the implementation document.
