@@ -19,7 +19,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-To run the services in the background:
+To run the services in the background: 
 
 ```bash
 docker compose up --build -d
@@ -113,16 +113,3 @@ docker compose down
 # Reset database volume
 docker compose down -v
 ```
-
-## Architecture
-
-```text
-Browser
-  -> Frontend UI
-  -> FastAPI backend
-  -> PostgreSQL
-  -> Android MCP server
-  -> ADB / Android devices
-```
-
-This starter structure is intentionally simple, making the product easy to run locally while following the architecture described in the implementation document.
